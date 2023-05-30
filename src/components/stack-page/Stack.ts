@@ -1,13 +1,12 @@
+export class Stack<T = string | number> {
+    private array: T[];
 
-export class Stack<T=string|number>{
-    private  array: T[];
-    constructor()
-    {
-        this.array =new Array<T>(0)
+    constructor() {
+        this.array = new Array<T>(0)
         console.log("stack")
     }
 
-    async push(item:T) {
+    async push(item: T) {
         this.array.push(item)
     }
 
@@ -15,14 +14,14 @@ export class Stack<T=string|number>{
         this.array.pop()
     }
 
-    clean()
-    {
-        this.array =new Array<T>(0)
+    clean() {
+        this.array = new Array<T>(0)
     }
 
-    toArray()
-    {
-        const result=this.array.map((i)=>{return i})
+    toArray() {
+        const result = this.array.map((i) => {
+            return i
+        })
         return result;
     }
 

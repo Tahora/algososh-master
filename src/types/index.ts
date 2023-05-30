@@ -1,11 +1,11 @@
-import { FC, PropsWithChildren } from "react";
+import {FC, PropsWithChildren} from "react";
 
 export type FCC<P = {}> = FC<PropsWithChildren<P>>;
 
 export enum SortVisualizerLength {
     Short = "shortLength",
     Medium = "mediumLength",
-    Large="largeLength",
+    Large = "largeLength",
 }
 
 export enum SortAlgorithms {
@@ -15,11 +15,11 @@ export enum SortAlgorithms {
 
 export enum LoaderTypes {
     PushHead = "pushHead",
-    PushTail= "pushTail",
+    PushTail = "pushTail",
     RemoveHead = "removeHead",
-    RemoveTail= "removeTail",
-    InsertByIndex="insertByIndex",
-    RemoveByIndex="RemoveByIndex"
+    RemoveTail = "removeTail",
+    InsertByIndex = "insertByIndex",
+    RemoveByIndex = "RemoveByIndex"
 }
 
 

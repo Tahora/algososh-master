@@ -34,26 +34,32 @@ export interface IBreakCalculationAction {
     readonly type: typeof BREAK_CALCULATION;
 }
 
-export type TItemsActions = ISetItemsAction|ICleanItemsAction|IBreakCalculationAction|IStartComputationAction|IStopComputationAction
+export type TItemsActions =
+    ISetItemsAction
+    | ICleanItemsAction
+    | IBreakCalculationAction
+    | IStartComputationAction
+    | IStopComputationAction
     ;
 
 
-
-const setItemsArray = (circles:CircleProps[]): ISetItemsAction => ({
+const setItemsArray = (circles: CircleProps[]): ISetItemsAction => ({
     type: SET_ITEMS,
     data: circles
 });
 
 export const cleanItems = (): ICleanItemsAction => ({
-    type: CLEAN_ITEMS});
+    type: CLEAN_ITEMS
+});
 
 export const breakCalculation = (): IBreakCalculationAction => ({
-    type: BREAK_CALCULATION});
+    type: BREAK_CALCULATION
+});
 
-export function setItems(circles:CircleProps[]): AppThunkAction<boolean> {
-    return function (dispatch,store) {
-        const breakCalc=store().items.breakCalculation;
-        if( breakCalc) {
+export function setItems(circles: CircleProps[]): AppThunkAction<boolean> {
+    return function (dispatch, store) {
+        const breakCalc = store().items.breakCalculation;
+        if (breakCalc) {
             return true
         }
         dispatch(setItemsArray(circles));
@@ -65,70 +71,68 @@ const stopComputation = (): IStopComputationAction => ({
     type: STOP_COMPUTATION,
 });
 
-function calculationsFinally(dispatch:TAppDispatch )
-{
-        //установим флаг окончания расчёта для разблокировки кнопки "Рассчитать"
-        dispatch(stopComputation());
-        //очистим хранилище элементов сортировки и флаг прерывания расчёта
-        dispatch(cleanItems());
+function calculationsFinally(dispatch: TAppDispatch) {
+    //установим флаг окончания расчёта для разблокировки кнопки "Рассчитать"
+    dispatch(stopComputation());
+    //очистим хранилище элементов сортировки и флаг прерывания расчёта
+    dispatch(cleanItems());
 }
 
-export function startStringComputation(text:string): AppThunkAction<void> {
+export function startStringComputation(text: string): AppThunkAction<void> {
     return function (dispatch) {
         dispatch({type: START_COMPUTATION});
 
-        const newPromise = new Promise(async function(resolve) {
-            await stringExpand(text,dispatch)
+        const newPromise = new Promise(async function (resolve) {
+            await stringExpand(text, dispatch)
             resolve(undefined);
         });
         newPromise
-            .finally(()=>calculationsFinally(dispatch));
+            .finally(() => calculationsFinally(dispatch));
     };
 }
 
-export function startFibonacciComputation(text:number): AppThunkAction<void> {
+export function startFibonacciComputation(text: number): AppThunkAction<void> {
     return function (dispatch) {
         dispatch({type: START_COMPUTATION});
 
-        const newPromise = new Promise(async function(resolve) {
-            await fibonacci(text,dispatch)
+        const newPromise = new Promise(async function (resolve) {
+            await fibonacci(text, dispatch)
             resolve(undefined);
         });
         newPromise
-            .finally(()=>calculationsFinally(dispatch));
+            .finally(() => calculationsFinally(dispatch));
     };
 }
 
-export function startBubbleComputation(arr:ColumnProps[],direction:Direction): AppThunkAction<void> {
+export function startBubbleComputation(arr: ColumnProps[], direction: Direction): AppThunkAction<void> {
     return function (dispatch) {
         dispatch({type: START_COMPUTATION});
-        const newPromise = new Promise(async function(resolve) {
-            await bubbleSort(arr,direction,dispatch)
+        const newPromise = new Promise(async function (resolve) {
+            await bubbleSort(arr, direction, dispatch)
             resolve(undefined);
         });
         newPromise
-            .finally(()=>calculationsFinally(dispatch));
+            .finally(() => calculationsFinally(dispatch));
     };
 }
 
-export function startSelectionComputation(arr:ColumnProps[],direction:Direction): AppThunkAction<void> {
+export function startSelectionComputation(arr: ColumnProps[], direction: Direction): AppThunkAction<void> {
     return function (dispatch) {
         dispatch({type: START_COMPUTATION});
-        const newPromise = new Promise(async function(resolve) {
-            await selectionSort(arr,direction,dispatch)
+        const newPromise = new Promise(async function (resolve) {
+            await selectionSort(arr, direction, dispatch)
             resolve(undefined);
         });
         newPromise
-            .finally(()=>calculationsFinally(dispatch));
+            .finally(() => calculationsFinally(dispatch));
     };
 }
 
 export function stopComputationAction(): AppThunkAction<void> {
-    return function (dispatch,store) {
+    return function (dispatch, store) {
         // установим флаг прерывания расчёта
         dispatch(breakCalculation())
-        if(!store().items.isComputationRun)
-        {
+        if (!store().items.isComputationRun) {
             dispatch(cleanItems());
         }
     };

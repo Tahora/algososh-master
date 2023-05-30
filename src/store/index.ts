@@ -1,13 +1,13 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { rootReducer } from "../services/reducers";
-import thunk, { ThunkAction } from "redux-thunk";
+import {configureStore} from "@reduxjs/toolkit";
+import {rootReducer} from "../services/reducers";
+import thunk, {ThunkAction} from "redux-thunk";
 
-import { AnyAction } from "redux";
+import {AnyAction} from "redux";
 
 
 export const store = configureStore({
-  reducer: rootReducer,
-  middleware: [ thunk],
+    reducer: rootReducer,
+    middleware: [thunk],
 });
 
 export type RootState = ReturnType<typeof store.getState>;

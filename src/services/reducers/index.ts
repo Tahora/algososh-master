@@ -1,12 +1,12 @@
-import { combineReducers } from "redux";
+import {combineReducers} from "redux";
 import {initStateItems, itemsReducer} from "./items";
 
 
 export const rootReducer = combineReducers({
-  items: itemsReducer
+    items: itemsReducer
 
 });
 
 export const initState = {
-  items:initStateItems
+    items: initStateItems
 };
