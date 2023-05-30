@@ -5,20 +5,18 @@ import {Input} from "../ui/input/input";
 import {Button} from "../ui/button/button";
 import {SortVizualizer} from "../sort-visualizer/sort-visualizer";
 import {LoaderTypes, SortVisualizerLength} from "../../types";
-import {useAppDispatch, useAppSelector} from "../../hooks/redux";
-import {stopComputationAction} from "../../services/actions/items";
-import {changeArr} from "../../utils/algorithms";
 import {LinkedList} from "./LinkedList";
 import {arrayToCircleArray} from "../../utils/common";
 import {Circle} from "../ui/circle/circle";
 import {ElementStates} from "../../types/element-states";
+import {useStore} from "../../hooks/useStore";
 
 export const ListPage: React.FC = () => {
     const [text, setText] = useState('')
     const [index, setIndex] = useState('')
     const [loaderType, setLoaderType] = useState<null | LoaderTypes>(null)
-    const dispatch = useAppDispatch();
-    const length = useAppSelector((state) => state.items.items.length);
+    const { items, changeArr} =useStore()
+    const length = items.length;
     const list = useMemo(() => {
         const l=new LinkedList<string>()
         l.pushHead('0')
@@ -31,8 +29,8 @@ export const ListPage: React.FC = () => {
 
     useEffect(() => {
         const visualState = arrayToCircleArray(list.toArray())
-        changeArr(visualState, dispatch, {head:0,tail:visualState.length-1},0)
-        return () => dispatch(stopComputationAction())
+        changeArr(visualState,  {head:0,tail:visualState.length-1},0)
+
     }, [])
 
     const changeText: React.FormEventHandler<HTMLInputElement> = (e) => {
@@ -92,16 +90,17 @@ export const ListPage: React.FC = () => {
         for (let i = 0; i <= ind; i++) {
             visualState[0].head = 'head'
             visualState[i].head = newItem
-            await changeArr(visualState, dispatch, {changingIndx: prevNodes, tail: visualState.length - 1})
+            await changeArr(visualState, {changingIndx: prevNodes, tail: visualState.length - 1})
             prevNodes.push(i)
             visualState[i].head = ''
         }
 
         list.pushByIndex(text, ind)
-
+        setIndex('')
+        setText('')
         visualState = arrayToCircleArray(list.toArray())
-        await changeArr(visualState, dispatch, {head: 0, tail: visualState.length - 1, modifiedIndx: [ind]})
-        await changeArr(visualState, dispatch, {head: 0, tail: visualState.length - 1, defaultIndx: [ind]})
+        await changeArr(visualState,  {head: 0, tail: visualState.length - 1, modifiedIndx: [ind]})
+        await changeArr(visualState,  {head: 0, tail: visualState.length - 1, defaultIndx: [ind]})
         setLoaderType(null)
     }
 
@@ -116,18 +115,19 @@ export const ListPage: React.FC = () => {
 
         let prevNodes: number[] = []
         for (let i = 0; i <= ind; i++) {
-            await changeArr(visualState, dispatch, {head: 0, changingIndx: prevNodes, tail: visualState.length - 1})
+            await changeArr(visualState, {head: 0, changingIndx: prevNodes, tail: visualState.length - 1})
             prevNodes.push(i)
         }
         const newItem = Circle({letter: visualState[ind].letter, isSmall: true, state: ElementStates.Changing})
         visualState[ind].letter = ''
         visualState[ind].tail = newItem
-        await changeArr(visualState, dispatch, {head: 0})
+        await changeArr(visualState,  {head: 0})
 
         list.removeByIndex(ind)
-
+        setIndex('')
+        setText('')
         visualState = arrayToCircleArray(list.toArray())
-        await changeArr(visualState, dispatch, {})
+        await changeArr(visualState,  {})
         setLoaderType(null)
     }
 
@@ -143,17 +143,18 @@ export const ListPage: React.FC = () => {
         let ind = headFlag ? 0 : visualState.length - 1
         visualState[0].head = "head"
         visualState[ind].head = newItem
-        await changeArr(visualState, dispatch, {})
+        await changeArr(visualState, {})
         // endregion отображение состояния списка до добавления элемента
 
         headFlag ? list.pushHead(text) : list.pushTail(text)
+        setIndex('')
         setText('')
 
         // region отображение состояния списка после добавления элемента
         visualState = arrayToCircleArray(list.toArray())
         ind = headFlag ? 0 : visualState.length - 1
-        await changeArr(visualState, dispatch, {head: 0, modifiedIndx: [ind], tail: visualState.length - 1})
-        await changeArr(visualState, dispatch, {defaultIndx: [ind]})
+        await changeArr(visualState,  {head: 0, modifiedIndx: [ind], tail: visualState.length - 1})
+        await changeArr(visualState,  {defaultIndx: [ind]})
         // endregion отображение состояния списка после добавления элемента
         setLoaderType(null)
     }
@@ -167,14 +168,14 @@ export const ListPage: React.FC = () => {
         visualState[visualState.length - 1].tail = "tail"
         visualState[ind].tail = newItem
         visualState[ind].letter = ''
-        await changeArr(visualState, dispatch, {head: 0})
+        await changeArr(visualState,  {head: 0})
         // endregion отображение состояния списка до удаления элемента
 
         headFlag ? list.removeHead() : list.removeTail()
 
         // region отображение состояния списка после удаления элемента
         visualState = arrayToCircleArray(list.toArray())
-        await changeArr(visualState, dispatch, {head: 0, tail: visualState.length - 1})
+        await changeArr(visualState,  {head: 0, tail: visualState.length - 1})
         // endregion отображение состояния списка после удаления элемента
     }
 
@@ -212,6 +213,7 @@ export const ListPage: React.FC = () => {
                        maxLength={2}
                        onChange={changeIndex}
                        value={index}
+                       type="number"
                        onBeforeInput={checkValue}></Input>
                 <Button extraClass={styles.largebutton}
                         text="Добавить по индексу"
@@ -228,8 +230,7 @@ export const ListPage: React.FC = () => {
                         disabled={(!!loaderType) || length <= 0 || !index}
                         isLoader={loaderType == LoaderTypes.RemoveByIndex}></Button>
             </div>
-            <SortVizualizer length={SortVisualizerLength.Large}
-                            withArrows={true}/>
+            <SortVizualizer length={SortVisualizerLength.Large}   items={items} withArrows={true}/>
         </SolutionLayout>
     );
 };

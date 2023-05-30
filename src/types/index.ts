@@ -22,4 +22,10 @@ export enum LoaderTypes {
     RemoveByIndex = "RemoveByIndex"
 }
 
+export enum StackLoaderTypes {
+    Push = "push",
+    Remove = "remove",
+    Clean = "clean",
+}
+
 

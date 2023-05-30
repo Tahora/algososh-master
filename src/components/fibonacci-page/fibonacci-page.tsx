@@ -1,22 +1,32 @@
-import React, {CompositionEventHandler, useEffect, useState} from "react";
+import React, {CompositionEventHandler,  useState} from "react";
 import {SolutionLayout} from "../ui/solution-layout/solution-layout";
-import {useAppDispatch, useAppSelector} from "../../hooks/redux";
-import {startFibonacciComputation, stopComputationAction} from "../../services/actions/items";
 import styles from "./fibonacci-page.module.css";
 import {Input} from "../ui/input/input";
 import {Button} from "../ui/button/button";
 import {SortVizualizer} from "../sort-visualizer/sort-visualizer";
 import {SortVisualizerLength} from "../../types";
+import {CircleProps} from "../ui/circle/circle";
+import {useStore} from "../../hooks/useStore";
 
 export const FibonacciPage: React.FC = () => {
     const [text, setText] = useState('')
-    const {isComputationRun} = useAppSelector((state) => state.items);
-    const dispatch = useAppDispatch();
+    const { items, changeArr,isComputationRun ,startCalculation} =useStore()
     const maxValue = 19
     const minValue = 1
 
+    async function fibonacci(countSteps: number, ) {
+        const array: CircleProps[] = [];
+        for (let i = 0; i <= countSteps; i++) {
+            const prevVal = (array.length <= 0) ? 1 : Number(array[array.length - 1].letter);
+            const prevVal2 = (array.length <= 1) ? 0 : Number(array[array.length - 2].letter);
+            array.push({letter: `${prevVal + prevVal2}`, index: i})
+            await changeArr(array, {})
+        }
+    }
+
+
     function startCalc() {
-        dispatch(startFibonacciComputation(Number(text)))
+        startCalculation( fibonacci, Number(text))
     }
 
     const checkValue: CompositionEventHandler<HTMLInputElement> = (e) => {
@@ -34,9 +44,7 @@ export const FibonacciPage: React.FC = () => {
     }
 
 
-    useEffect(() => {
-        return () => dispatch(stopComputationAction())
-    }, [])
+
 
 
     return (
@@ -53,9 +61,10 @@ export const FibonacciPage: React.FC = () => {
                 <Button extraClass={styles.button}
                         text="Развернуть"
                         onClick={startCalc}
+                        disabled={!text}
                         isLoader={isComputationRun}></Button>
             </div>
-            <SortVizualizer length={SortVisualizerLength.Short}/>
+            <SortVizualizer items={items} length={SortVisualizerLength.Short}/>
         </SolutionLayout>
     );
 };

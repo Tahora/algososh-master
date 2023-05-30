@@ -1,46 +1,49 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, { useMemo, useState} from "react";
 import {SolutionLayout} from "../ui/solution-layout/solution-layout";
 import styles from "./stack-page.module.css";
-import {SortVisualizerLength} from "../../types";
+import {StackLoaderTypes, SortVisualizerLength} from "../../types";
 import {Button} from "../ui/button/button";
 import {SortVizualizer} from "../sort-visualizer/sort-visualizer";
 import {Input} from "../ui/input/input";
-import {useAppDispatch, useAppSelector} from "../../hooks/redux";
 import {Stack} from "./Stack";
-import {stopComputationAction} from "../../services/actions/items";
-import {changeArr} from "../../utils/algorithms";
 import {arrayToCircleArray} from "../../utils/common";
+import {useStore} from "../../hooks/useStore";
+import {SHORT_DELAY_IN_MS} from "../../constants/delays";
+
 
 
 export const StackPage: React.FC = () => {
     const [text, setText] = useState('')
-    const length = useAppSelector((state) => state.items.items.length);
-    const dispatch = useAppDispatch();
+    const [loaderType, setLoaderType] = useState<null | StackLoaderTypes>(null)
+    const { items, changeArr} =useStore()
     const stack = useMemo(() => {
         return new Stack()
     }, [])
 
-    useEffect(() => {
-        return () => dispatch(stopComputationAction())
-    }, [])
 
-    function pushItem() {
+    async function pushItem() {
+        setLoaderType(StackLoaderTypes.Push)
         stack.push(text)
         setText('')
         let visualState = arrayToCircleArray(stack.toArray())
-        changeArr(visualState, dispatch, {defaultIndx: [visualState.length - 1]}, 0)
+        await changeArr(visualState,  {defaultIndx: [visualState.length - 1]},SHORT_DELAY_IN_MS)
+        setLoaderType(null)
     }
 
-    function clean() {
+    async function clean() {
+        setLoaderType(StackLoaderTypes.Clean)
         stack.clean()
         let visualState = arrayToCircleArray(stack.toArray())
-        changeArr(visualState, dispatch, {}, 0)
+        await changeArr(visualState,  {},SHORT_DELAY_IN_MS)
+        setLoaderType(null)
     }
 
-    function pop() {
+    async function pop() {
+        setLoaderType(StackLoaderTypes.Remove)
         stack.pop()
         let visualState = arrayToCircleArray(stack.toArray())
-        changeArr(visualState, dispatch, {}, 0)
+        await changeArr(visualState,  {},SHORT_DELAY_IN_MS)
+        setLoaderType(null)
     }
 
     const changeText: React.FormEventHandler<HTMLInputElement> = (e) => {
@@ -57,16 +60,19 @@ export const StackPage: React.FC = () => {
                        value={text}></Input>
                 <Button text="Добавить"
                         onClick={() => pushItem()}
-                        disabled={!text}></Button>
+                        isLoader={loaderType == StackLoaderTypes.Push}
+                        disabled={!!loaderType|| !text}></Button>
                 <Button text="Удалить"
                         onClick={() => pop()}
-                        disabled={length <= 0}></Button>
+                        isLoader={loaderType == StackLoaderTypes.Remove}
+                        disabled={!!loaderType|| items.length <= 0}></Button>
                 <Button extraClass={styles.mediumIndent}
                         text="Очистить"
                         onClick={() => clean()}
-                        disabled={length <= 0}></Button>
+                        isLoader={loaderType == StackLoaderTypes.Clean}
+                        disabled={!!loaderType|| items.length <= 0}></Button>
             </div>
-            <SortVizualizer length={SortVisualizerLength.Large}/>
+            <SortVizualizer items={items} length={SortVisualizerLength.Large}/>
         </SolutionLayout>
     );
 };

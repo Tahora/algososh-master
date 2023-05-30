@@ -4,51 +4,57 @@ import styles from "../stack-page/stack-page.module.css";
 import {Input} from "../ui/input/input";
 import {Button} from "../ui/button/button";
 import {SortVizualizer} from "../sort-visualizer/sort-visualizer";
-import {SortVisualizerLength} from "../../types";
-import {useAppDispatch, useAppSelector} from "../../hooks/redux";
+import {SortVisualizerLength, StackLoaderTypes} from "../../types";
 import {Queue} from "./Queue";
-import {stopComputationAction} from "../../services/actions/items";
 import {arrayToCircleArray} from "../../utils/common";
-import {changeArr} from "../../utils/algorithms";
+import {useStore} from "../../hooks/useStore";
+import {SHORT_DELAY_IN_MS} from "../../constants/delays";
 
 
 export const QueuePage: React.FC = () => {
     const [text, setText] = useState('')
-    const dispatch = useAppDispatch();
+    const [loaderType, setLoaderType] = useState<null | StackLoaderTypes>(null)
+    const { items, changeArr} =useStore()
     const queue = useMemo(() => {
         return new Queue(6)
     }, [])
-    const length = useAppSelector((state) => state.items.items.length);
+    const tail = queue.getTail();
+
 
     useEffect(() => {
-        changeArr(arrayToCircleArray(queue.toArray()), dispatch, {}, 0)
-        return () => dispatch(stopComputationAction())
+        changeArr(arrayToCircleArray(queue.toArray()),  {}, 0)
     }, [])
 
     async function pushItem() {
+        setLoaderType(StackLoaderTypes.Push)
         queue.push(text)
         setText('')
 
         const tail = queue.getTail();
         const head = queue.getHead();
         let visualState = arrayToCircleArray(queue.toArray())
-        await changeArr(visualState, dispatch, {changingIndx: [tail], tail: tail, head: head})
-        changeArr(visualState, dispatch, {defaultIndx: [tail]}, 0)
+        await changeArr(visualState, {changingIndx: [tail], tail: tail, head: head},SHORT_DELAY_IN_MS)
+        changeArr(visualState,  {defaultIndx: [tail]}, 0)
+        setLoaderType(null)
     }
 
-    function clean() {
+    async function clean() {
+        setLoaderType(StackLoaderTypes.Clean)
         queue.clean()
         let visualState = arrayToCircleArray(queue.toArray())
-        changeArr(visualState, dispatch, {}, 0)
+        await changeArr(visualState,  {}, SHORT_DELAY_IN_MS)
+        setLoaderType(null)
     }
 
-    function pop() {
+    async function pop() {
+        setLoaderType(StackLoaderTypes.Remove)
         queue.pop()
 
         const tail = queue.getTail();
         const head = queue.getHead();
         let visualState = arrayToCircleArray(queue.toArray())
-        changeArr(visualState, dispatch, {head: head, tail: tail}, 0)
+        await changeArr(visualState,  {head: head, tail: tail}, SHORT_DELAY_IN_MS)
+        setLoaderType(null)
     }
 
     const changeText: React.FormEventHandler<HTMLInputElement> = (e) => {
@@ -65,16 +71,19 @@ export const QueuePage: React.FC = () => {
                        value={text}></Input>
                 <Button text="Добавить"
                         onClick={() => pushItem()}
-                        disabled={!text}></Button>
+                        isLoader={loaderType == StackLoaderTypes.Push}
+                        disabled={!!loaderType||!text}></Button>
                 <Button text="Удалить"
                         onClick={() => pop()}
-                        disabled={length <= 0}></Button>
+                        isLoader={loaderType == StackLoaderTypes.Remove}
+                        disabled={!!loaderType||tail < 0}></Button>
                 <Button extraClass={styles.mediumIndent}
                         text="Очистить"
                         onClick={() => clean()}
-                        disabled={length <= 0}></Button>
+                        isLoader={loaderType == StackLoaderTypes.Clean}
+                        disabled={!!loaderType|| tail< 0}></Button>
             </div>
-            <SortVizualizer length={SortVisualizerLength.Large}/>
+             <SortVizualizer items={items} length={SortVisualizerLength.Large}/>
 
         </SolutionLayout>
     );
