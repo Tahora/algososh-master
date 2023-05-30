@@ -12,7 +12,6 @@ import {LinkedList} from "./LinkedList";
 import {arrayToCircleArray} from "../../utils/common";
 import {Circle} from "../ui/circle/circle";
 import {ElementStates} from "../../types/element-states";
-import {DELAY_IN_MS} from "../../constants/delays";
 
 export const ListPage: React.FC = () => {
     const [text, setText] = useState('')
@@ -21,11 +20,18 @@ export const ListPage: React.FC = () => {
     const dispatch = useAppDispatch();
     const length = useAppSelector((state) => state.items.items.length);
     const list = useMemo(() => {
-        return new LinkedList<string>()
+        const l=new LinkedList<string>()
+        l.pushHead('0')
+        l.pushTail('34')
+        l.pushTail('8')
+        l.pushTail('1')
+        return l
     }, [])
 
 
     useEffect(() => {
+        const visualState = arrayToCircleArray(list.toArray())
+        changeArr(visualState, dispatch, {head:0,tail:visualState.length-1},0)
         return () => dispatch(stopComputationAction())
     }, [])
 
