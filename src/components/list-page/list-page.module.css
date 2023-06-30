@@ -1,0 +1,27 @@
+.container {
+    display: flex;
+    column-gap: 12px;
+    row-gap: 4px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.textContainer {
+    margin-top: 48px;
+}
+
+.indexContainer {
+    margin-top: 12px;
+}
+
+.input {
+    width: 204px;
+}
+
+.button {
+    width: 175px;
+}
+
+.largebutton {
+    width: 360px;
+}
