@@ -24,7 +24,7 @@ export const SortVizualizer: React.FC<ISortVisualizerProps> = ({items= new Array
         if (isItemsCircle) {
             const circle = item as CircleProps
             return (
-                <div className={styles.withArrowContainer} key={key}>
+                <div  className={styles.withArrowContainer} key={key}>
                 <Circle extraClass={styles.itemIndent}  {...circle}/>
                 {withArrows && index < items.length - 1 && <ArrowIcon/>}
                 </div>)
@@ -37,8 +37,8 @@ export const SortVizualizer: React.FC<ISortVisualizerProps> = ({items= new Array
 
 
     return (
-        <div className={styles.containerTop}>
-            <div className={`${styles.container} ${isItemsCircle ? styles.circleContainer : styles.columnContainer} ${styles[length]}`}>
+        <div  className={styles.containerTop}>
+            <div data-test-id="sortVizualizer" className={`${styles.container} ${isItemsCircle ? styles.circleContainer : styles.columnContainer} ${styles[length]}`}>
                 {items.map((i, ind) => {
                     return createItem(i, v4(), ind)
                 })}

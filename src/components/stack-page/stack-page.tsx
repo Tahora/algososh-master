@@ -8,7 +8,7 @@ import {Input} from "../ui/input/input";
 import {Stack} from "./Stack";
 import {arrayToCircleArray} from "../../utils/common";
 import {useStore} from "../../hooks/useStore";
-import {SHORT_DELAY_IN_MS} from "../../constants/delays";
+
 
 
 
@@ -26,7 +26,7 @@ export const StackPage: React.FC = () => {
         stack.push(text)
         setText('')
         let visualState = arrayToCircleArray(stack.toArray())
-        await changeArr(visualState,  {defaultIndx: [visualState.length - 1]},SHORT_DELAY_IN_MS)
+        await changeArr(visualState,  {defaultIndx: [visualState.length - 1]})
         setLoaderType(null)
     }
 
@@ -34,7 +34,7 @@ export const StackPage: React.FC = () => {
         setLoaderType(StackLoaderTypes.Clean)
         stack.clean()
         let visualState = arrayToCircleArray(stack.toArray())
-        await changeArr(visualState,  {},SHORT_DELAY_IN_MS)
+        await changeArr(visualState,  {})
         setLoaderType(null)
     }
 
@@ -42,7 +42,7 @@ export const StackPage: React.FC = () => {
         setLoaderType(StackLoaderTypes.Remove)
         stack.pop()
         let visualState = arrayToCircleArray(stack.toArray())
-        await changeArr(visualState,  {},SHORT_DELAY_IN_MS)
+        await changeArr(visualState,  {})
         setLoaderType(null)
     }
 

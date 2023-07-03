@@ -1,4 +1,5 @@
 import {CircleProps} from "../components/ui/circle/circle";
+import {ColumnProps} from "../components/ui/column/column";
 
 export async function setTimeoutAsync(ms: number | undefined) {
     return new Promise<void>(res => setTimeout(res, ms))
@@ -23,6 +24,14 @@ export function arrayToCircleArray<T = string | number | undefined>(array: T[]) 
     const result = new Array<CircleProps>(array.length)
     for (let i = 0; i < array.length; i++) {
         result[i] = array[i] ? {index: i, letter: `${array[i]}`} : {index: i, letter: ``}
+    }
+    return result
+}
+
+export function arrayToColummnArray(array: number[]) {
+    const result = new Array<ColumnProps>(array.length)
+    for (let i = 0; i < array.length; i++) {
+        result[i]= {index:array[i]}
     }
     return result
 }

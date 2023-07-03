@@ -127,6 +127,8 @@ export const ListPage: React.FC = () => {
         setIndex('')
         setText('')
         visualState = arrayToCircleArray(list.toArray())
+        visualState[0].head = 'head'
+        visualState[ visualState.length - 1].tail = 'tail'
         await changeArr(visualState,  {})
         setLoaderType(null)
     }
@@ -182,7 +184,8 @@ export const ListPage: React.FC = () => {
     return (
         <SolutionLayout title="Связный список">
             <div className={`${styles.container} ${styles.textContainer}`}>
-                <Input extraClass={`${styles.input}`}
+                <Input data-test-id="valueInput"
+                       extraClass={`${styles.input}`}
                        maxLength={4}
                        isLimitText={true}
                        onChange={changeText}
@@ -210,6 +213,7 @@ export const ListPage: React.FC = () => {
             </div>
             <div className={`${styles.container} ${styles.indexContainer}`}>
                 <Input extraClass={styles.input}
+                       data-test-id="indexInput"
                        maxLength={2}
                        onChange={changeIndex}
                        value={index}
