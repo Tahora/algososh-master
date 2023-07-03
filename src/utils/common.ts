@@ -31,7 +31,7 @@ export function arrayToCircleArray<T = string | number | undefined>(array: T[]) 
 export function arrayToColummnArray(array: number[]) {
     const result = new Array<ColumnProps>(array.length)
     for (let i = 0; i < array.length; i++) {
-        result[i]= {index:array[i]}
+        result[i] = {index: array[i]}
     }
     return result
 }

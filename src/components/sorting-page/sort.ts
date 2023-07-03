@@ -32,16 +32,17 @@ function swap(array: Array<any>, index1: number, index2: number) {
     array[index2] = tempItem
 }
 
-export async function bubbleSortBase({arrayNums, direction = Direction.Ascending} :IBubbleParams,
-                    storeCallback?:  (array: CircleProps[],
-                                      changes:{changingIndx?: number[],
-                                          modifiedIndx?: number[],
-                                          defaultIndx?: number[],
-                                          head?: number,
-                                          tail?: number
-                                      },
-                                      pause?: number)=>{}|null) {
-    const array=arrayToColummnArray(arrayNums)
+export async function bubbleSortBase({arrayNums, direction = Direction.Ascending}: IBubbleParams,
+                                     storeCallback?: (array: CircleProps[],
+                                                      changes: {
+                                                          changingIndx?: number[],
+                                                          modifiedIndx?: number[],
+                                                          defaultIndx?: number[],
+                                                          head?: number,
+                                                          tail?: number
+                                                      },
+                                                      pause?: number) => {} | null) {
+    const array = arrayToColummnArray(arrayNums)
     const isSwap = getSwapChecker(direction)
 
     for (let i = 0; i < array.length; i++) {
@@ -49,11 +50,11 @@ export async function bubbleSortBase({arrayNums, direction = Direction.Ascending
             if (isSwap(array[j], array[j + 1])) {
                 swap(array, j, j + 1)
             }
-            if(storeCallback) {
+            if (storeCallback) {
                 await storeCallback(array, {changingIndx: [j, j + 1], defaultIndx: j - 1 >= 0 ? [j - 1] : []})
             }
         }
-        if(storeCallback) {
+        if (storeCallback) {
             await storeCallback(array, {
                 modifiedIndx: i == array.length - 2 ? [array.length - i - 1, 0] : [array.length - i - 1],
                 defaultIndx: i < array.length - 2 ? [array.length - i - 2] : []
@@ -61,21 +62,23 @@ export async function bubbleSortBase({arrayNums, direction = Direction.Ascending
         }
 
     }
-    return array.map((i)=>{return i.index})
+    return array.map((i) => {
+        return i.index
+    })
 }
 
 
-
-export async function selectionSortBase({arrayNums, direction = Direction.Ascending} :IBubbleParams,
-                             storeCallback?:  (array: CircleProps[],
-                                               changes:{changingIndx?: number[],
-                                                   modifiedIndx?: number[],
-                                                   defaultIndx?: number[],
-                                                   head?: number,
-                                                   tail?: number
-                                               },
-                                               pause?: number)=>{}|null) {
-    const array=arrayToColummnArray(arrayNums)
+export async function selectionSortBase({arrayNums, direction = Direction.Ascending}: IBubbleParams,
+                                        storeCallback?: (array: CircleProps[],
+                                                         changes: {
+                                                             changingIndx?: number[],
+                                                             modifiedIndx?: number[],
+                                                             defaultIndx?: number[],
+                                                             head?: number,
+                                                             tail?: number
+                                                         },
+                                                         pause?: number) => {} | null) {
+    const array = arrayToColummnArray(arrayNums)
     const isSwap = getSwapChecker(direction)
 
     for (let i = 0; i < array.length - 1; i++) {
@@ -85,13 +88,13 @@ export async function selectionSortBase({arrayNums, direction = Direction.Ascend
             if (isSwap(array[minIndx], array[j])) {
                 minIndx = j
             }
-            if(storeCallback) {
+            if (storeCallback) {
                 await storeCallback(array, {changingIndx: [j]})
                 array[j].state = ElementStates.Default
             }
         }
         swap(array, i, minIndx)
-        if(storeCallback) {
+        if (storeCallback) {
             array[i].state = ElementStates.Default
             array[minIndx].state = ElementStates.Default
             await storeCallback(array, {
@@ -100,5 +103,7 @@ export async function selectionSortBase({arrayNums, direction = Direction.Ascend
             })
         }
     }
-    return array.map((i)=>{return i.index})
+    return array.map((i) => {
+        return i.index
+    })
 }

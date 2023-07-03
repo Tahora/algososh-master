@@ -1,4 +1,4 @@
-import React, { useMemo, useState} from "react";
+import React, {useMemo, useState} from "react";
 import {SolutionLayout} from "../ui/solution-layout/solution-layout";
 import styles from "./stack-page.module.css";
 import {StackLoaderTypes, SortVisualizerLength} from "../../types";
@@ -10,12 +10,10 @@ import {arrayToCircleArray} from "../../utils/common";
 import {useStore} from "../../hooks/useStore";
 
 
-
-
 export const StackPage: React.FC = () => {
     const [text, setText] = useState('')
     const [loaderType, setLoaderType] = useState<null | StackLoaderTypes>(null)
-    const { items, changeArr} =useStore()
+    const {items, changeArr} = useStore()
     const stack = useMemo(() => {
         return new Stack()
     }, [])
@@ -26,7 +24,7 @@ export const StackPage: React.FC = () => {
         stack.push(text)
         setText('')
         let visualState = arrayToCircleArray(stack.toArray())
-        await changeArr(visualState,  {defaultIndx: [visualState.length - 1]})
+        await changeArr(visualState, {defaultIndx: [visualState.length - 1]})
         setLoaderType(null)
     }
 
@@ -34,7 +32,7 @@ export const StackPage: React.FC = () => {
         setLoaderType(StackLoaderTypes.Clean)
         stack.clean()
         let visualState = arrayToCircleArray(stack.toArray())
-        await changeArr(visualState,  {})
+        await changeArr(visualState, {})
         setLoaderType(null)
     }
 
@@ -42,7 +40,7 @@ export const StackPage: React.FC = () => {
         setLoaderType(StackLoaderTypes.Remove)
         stack.pop()
         let visualState = arrayToCircleArray(stack.toArray())
-        await changeArr(visualState,  {})
+        await changeArr(visualState, {})
         setLoaderType(null)
     }
 
@@ -61,18 +59,19 @@ export const StackPage: React.FC = () => {
                 <Button text="Добавить"
                         onClick={() => pushItem()}
                         isLoader={loaderType == StackLoaderTypes.Push}
-                        disabled={!!loaderType|| !text}></Button>
+                        disabled={!!loaderType || !text}></Button>
                 <Button text="Удалить"
                         onClick={() => pop()}
                         isLoader={loaderType == StackLoaderTypes.Remove}
-                        disabled={!!loaderType|| items.length <= 0}></Button>
+                        disabled={!!loaderType || items.length <= 0}></Button>
                 <Button extraClass={styles.mediumIndent}
                         text="Очистить"
                         onClick={() => clean()}
                         isLoader={loaderType == StackLoaderTypes.Clean}
-                        disabled={!!loaderType|| items.length <= 0}></Button>
+                        disabled={!!loaderType || items.length <= 0}></Button>
             </div>
-            <SortVizualizer items={items} length={SortVisualizerLength.Large}/>
+            <SortVizualizer items={items}
+                            length={SortVisualizerLength.Large}/>
         </SolutionLayout>
     );
 };

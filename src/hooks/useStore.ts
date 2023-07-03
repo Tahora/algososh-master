@@ -8,22 +8,22 @@ export function useStore() {
     const [isComputationRun, setIsComputationRun] = useState(false)
     const [items, setItems] = useState(new Array<CircleProps>(0))
 
-    const startCalculation=<T>(callback:(p:T)=>Promise<void>, param:T)=>{
+    const startCalculation = <T>(callback: (p: T) => Promise<void>, param: T) => {
         setIsComputationRun(true)
-        callback(param).then((res)=>setIsComputationRun(false))
+        callback(param).then((res) => setIsComputationRun(false))
     }
 
 
-    const changeArr= async (array: CircleProps[],
-                                    changes:
-                                        {
-                                            changingIndx?: number[],
-                                            modifiedIndx?: number[],
-                                            defaultIndx?: number[],
-                                            head?: number,
-                                            tail?: number
-                                        },
-                                    pause: number = DELAY_IN_MS) =>{
+    const changeArr = async (array: CircleProps[],
+                             changes:
+                                 {
+                                     changingIndx?: number[],
+                                     modifiedIndx?: number[],
+                                     defaultIndx?: number[],
+                                     head?: number,
+                                     tail?: number
+                                 },
+                             pause: number = DELAY_IN_MS) => {
         changes.changingIndx?.forEach((i) => {
             array[i].state = ElementStates.Changing
         })
@@ -40,5 +40,5 @@ export function useStore() {
         await setTimeoutAsync(pause)
     }
 
-    return { items, changeArr,isComputationRun,startCalculation };
+    return {items, changeArr, isComputationRun, startCalculation};
 }

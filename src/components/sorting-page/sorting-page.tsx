@@ -9,12 +9,11 @@ import {SortVizualizer} from "../sort-visualizer/sort-visualizer";
 import {arrayToColummnArray, createRandomArray} from "../../utils/common";
 import {ColumnProps} from "../ui/column/column";
 import {useStore} from "../../hooks/useStore";
-import {selectionSortBase,bubbleSortBase, IBubbleParams} from "./sort";
-
+import {selectionSortBase, bubbleSortBase, IBubbleParams} from "./sort";
 
 
 export const SortingPage: React.FC = () => {
-    const { items, changeArr,isComputationRun ,startCalculation} =useStore()
+    const {items, changeArr, isComputationRun, startCalculation} = useStore()
     const [sortAlgorithm, setSortAlgorithm] = useState(SortAlgorithms.Bubble)
     const [currentDirection, setCurrentDirection] = useState(Direction.Ascending)
 
@@ -28,28 +27,28 @@ export const SortingPage: React.FC = () => {
 
     const setNewArray = async () => {
         const array = arrayToColummnArray(createRandomArray());
-        await changeArr(array,{},0)
+        await changeArr(array, {}, 0)
     }
 
-    async function selectionSort({arrayNums, direction = Direction.Ascending} :IBubbleParams) {
-        await selectionSortBase({arrayNums, direction},changeArr)
+    async function selectionSort({arrayNums, direction = Direction.Ascending}: IBubbleParams) {
+        await selectionSortBase({arrayNums, direction}, changeArr)
     }
 
-    async function bubbleSort({arrayNums, direction = Direction.Ascending} :IBubbleParams) {
-        await bubbleSortBase({arrayNums, direction},changeArr)
+    async function bubbleSort({arrayNums, direction = Direction.Ascending}: IBubbleParams) {
+        await bubbleSortBase({arrayNums, direction}, changeArr)
     }
 
-        function startCalc(direction: Direction) {
+    function startCalc(direction: Direction) {
         setCurrentDirection(direction)
-        const arrayNums= items.map((i) => (i as ColumnProps).index)
-        changeArr( arrayToColummnArray(arrayNums),{})
+        const arrayNums = items.map((i) => (i as ColumnProps).index)
+        changeArr(arrayToColummnArray(arrayNums), {})
 
         switch (sortAlgorithm) {
             case SortAlgorithms.Bubble:
-                startCalculation(bubbleSort,{arrayNums, direction})
+                startCalculation(bubbleSort, {arrayNums, direction})
                 break
             case SortAlgorithms.Selection:
-                startCalculation(selectionSort,{arrayNums, direction})
+                startCalculation(selectionSort, {arrayNums, direction})
                 break
         }
     }
@@ -84,7 +83,8 @@ export const SortingPage: React.FC = () => {
                         onClick={setNewArray}
                         disabled={isComputationRun}></Button>
             </div>
-            <SortVizualizer items={items} length={SortVisualizerLength.Large}/>
+            <SortVizualizer items={items}
+                            length={SortVisualizerLength.Large}/>
         </SolutionLayout>
     );
 };

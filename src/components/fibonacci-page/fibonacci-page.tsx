@@ -1,4 +1,4 @@
-import React, {CompositionEventHandler,  useState} from "react";
+import React, {CompositionEventHandler, useState} from "react";
 import {SolutionLayout} from "../ui/solution-layout/solution-layout";
 import styles from "./fibonacci-page.module.css";
 import {Input} from "../ui/input/input";
@@ -10,11 +10,11 @@ import {useStore} from "../../hooks/useStore";
 
 export const FibonacciPage: React.FC = () => {
     const [text, setText] = useState('')
-    const { items, changeArr,isComputationRun ,startCalculation} =useStore()
+    const {items, changeArr, isComputationRun, startCalculation} = useStore()
     const maxValue = 19
     const minValue = 1
 
-    async function fibonacci(countSteps: number, ) {
+    async function fibonacci(countSteps: number,) {
         const array: CircleProps[] = [];
         for (let i = 0; i <= countSteps; i++) {
             const prevVal = (array.length <= 0) ? 1 : Number(array[array.length - 1].letter);
@@ -26,7 +26,7 @@ export const FibonacciPage: React.FC = () => {
 
 
     function startCalc() {
-        startCalculation( fibonacci, Number(text))
+        startCalculation(fibonacci, Number(text))
     }
 
     const checkValue: CompositionEventHandler<HTMLInputElement> = (e) => {
@@ -42,9 +42,6 @@ export const FibonacciPage: React.FC = () => {
     const changeText: React.FormEventHandler<HTMLInputElement> = (e) => {
         setText((e.target as HTMLInputElement).value)
     }
-
-
-
 
 
     return (
@@ -64,7 +61,8 @@ export const FibonacciPage: React.FC = () => {
                         disabled={!text}
                         isLoader={isComputationRun}></Button>
             </div>
-            <SortVizualizer items={items} length={SortVisualizerLength.Short}/>
+            <SortVizualizer items={items}
+                            length={SortVisualizerLength.Short}/>
         </SolutionLayout>
     );
 };

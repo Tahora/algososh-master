@@ -15,10 +15,10 @@ export const ListPage: React.FC = () => {
     const [text, setText] = useState('')
     const [index, setIndex] = useState('')
     const [loaderType, setLoaderType] = useState<null | LoaderTypes>(null)
-    const { items, changeArr} =useStore()
+    const {items, changeArr} = useStore()
     const length = items.length;
     const list = useMemo(() => {
-        const l=new LinkedList<string>()
+        const l = new LinkedList<string>()
         l.pushHead('0')
         l.pushTail('34')
         l.pushTail('8')
@@ -29,7 +29,7 @@ export const ListPage: React.FC = () => {
 
     useEffect(() => {
         const visualState = arrayToCircleArray(list.toArray())
-        changeArr(visualState,  {head:0,tail:visualState.length-1},0)
+        changeArr(visualState, {head: 0, tail: visualState.length - 1}, 0)
 
     }, [])
 
@@ -99,8 +99,8 @@ export const ListPage: React.FC = () => {
         setIndex('')
         setText('')
         visualState = arrayToCircleArray(list.toArray())
-        await changeArr(visualState,  {head: 0, tail: visualState.length - 1, modifiedIndx: [ind]})
-        await changeArr(visualState,  {head: 0, tail: visualState.length - 1, defaultIndx: [ind]})
+        await changeArr(visualState, {head: 0, tail: visualState.length - 1, modifiedIndx: [ind]})
+        await changeArr(visualState, {head: 0, tail: visualState.length - 1, defaultIndx: [ind]})
         setLoaderType(null)
     }
 
@@ -121,15 +121,15 @@ export const ListPage: React.FC = () => {
         const newItem = Circle({letter: visualState[ind].letter, isSmall: true, state: ElementStates.Changing})
         visualState[ind].letter = ''
         visualState[ind].tail = newItem
-        await changeArr(visualState,  {head: 0})
+        await changeArr(visualState, {head: 0})
 
         list.removeByIndex(ind)
         setIndex('')
         setText('')
         visualState = arrayToCircleArray(list.toArray())
         visualState[0].head = 'head'
-        visualState[ visualState.length - 1].tail = 'tail'
-        await changeArr(visualState,  {})
+        visualState[visualState.length - 1].tail = 'tail'
+        await changeArr(visualState, {})
         setLoaderType(null)
     }
 
@@ -155,8 +155,8 @@ export const ListPage: React.FC = () => {
         // region отображение состояния списка после добавления элемента
         visualState = arrayToCircleArray(list.toArray())
         ind = headFlag ? 0 : visualState.length - 1
-        await changeArr(visualState,  {head: 0, modifiedIndx: [ind], tail: visualState.length - 1})
-        await changeArr(visualState,  {defaultIndx: [ind]})
+        await changeArr(visualState, {head: 0, modifiedIndx: [ind], tail: visualState.length - 1})
+        await changeArr(visualState, {defaultIndx: [ind]})
         // endregion отображение состояния списка после добавления элемента
         setLoaderType(null)
     }
@@ -170,14 +170,14 @@ export const ListPage: React.FC = () => {
         visualState[visualState.length - 1].tail = "tail"
         visualState[ind].tail = newItem
         visualState[ind].letter = ''
-        await changeArr(visualState,  {head: 0})
+        await changeArr(visualState, {head: 0})
         // endregion отображение состояния списка до удаления элемента
 
         headFlag ? list.removeHead() : list.removeTail()
 
         // region отображение состояния списка после удаления элемента
         visualState = arrayToCircleArray(list.toArray())
-        await changeArr(visualState,  {head: 0, tail: visualState.length - 1})
+        await changeArr(visualState, {head: 0, tail: visualState.length - 1})
         // endregion отображение состояния списка после удаления элемента
     }
 
@@ -234,7 +234,9 @@ export const ListPage: React.FC = () => {
                         disabled={(!!loaderType) || length <= 0 || !index}
                         isLoader={loaderType == LoaderTypes.RemoveByIndex}></Button>
             </div>
-            <SortVizualizer length={SortVisualizerLength.Large}   items={items} withArrows={true}/>
+            <SortVizualizer length={SortVisualizerLength.Large}
+                            items={items}
+                            withArrows={true}/>
         </SolutionLayout>
     );
 };
