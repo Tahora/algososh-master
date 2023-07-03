@@ -29,8 +29,10 @@ export const ListPage: React.FC = () => {
 
     useEffect(() => {
         const visualState = arrayToCircleArray(list.toArray())
+
         changeArr(visualState, {head: 0, tail: visualState.length - 1}, 0)
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const changeText: React.FormEventHandler<HTMLInputElement> = (e) => {
@@ -78,7 +80,7 @@ export const ListPage: React.FC = () => {
         setLoaderType(LoaderTypes.InsertByIndex)
         const ind = Number(index)
         let visualState = arrayToCircleArray(list.toArray())
-        if (visualState.length == 0) {
+        if (visualState.length === 0) {
             visualState.push({letter: ''})
         }
         const newItem = Circle({letter: `${text}`, isSmall: true, state: ElementStates.Changing})
@@ -137,7 +139,7 @@ export const ListPage: React.FC = () => {
         // region отображение состояния списка до добавления элемента
         const newItem = Circle({letter: `${text}`, isSmall: true, state: ElementStates.Changing})
         let visualState = arrayToCircleArray(list.toArray())
-        if (visualState.length == 0) {
+        if (visualState.length === 0) {
             visualState.push({letter: ''})
         } else {
             visualState[visualState.length - 1].tail = "tail"
@@ -194,22 +196,22 @@ export const ListPage: React.FC = () => {
                         text="Добавить в head"
                         onClick={() => pushHead()}
                         disabled={(!!loaderType) || !text}
-                        isLoader={loaderType == LoaderTypes.PushHead}></Button>
+                        isLoader={loaderType === LoaderTypes.PushHead}></Button>
                 <Button extraClass={styles.button}
                         text="Добавить в tail"
                         onClick={() => pushTail()}
                         disabled={(!!loaderType) || !text}
-                        isLoader={loaderType == LoaderTypes.PushTail}></Button>
+                        isLoader={loaderType === LoaderTypes.PushTail}></Button>
                 <Button extraClass={styles.button}
                         text="Удалить из head"
                         onClick={() => removeHead()}
                         disabled={(!!loaderType) || length <= 0}
-                        isLoader={loaderType == LoaderTypes.RemoveHead}></Button>
+                        isLoader={loaderType === LoaderTypes.RemoveHead}></Button>
                 <Button extraClass={styles.button}
                         text="Удалить из tail"
                         onClick={() => removeTail()}
                         disabled={(!!loaderType) || length <= 0}
-                        isLoader={loaderType == LoaderTypes.RemoveTail}></Button>
+                        isLoader={loaderType === LoaderTypes.RemoveTail}></Button>
             </div>
             <div className={`${styles.container} ${styles.indexContainer}`}>
                 <Input extraClass={styles.input}
@@ -225,14 +227,14 @@ export const ListPage: React.FC = () => {
                             insertByIndex()
                         }}
                         disabled={(!!loaderType) || !index || !text}
-                        isLoader={loaderType == LoaderTypes.InsertByIndex}></Button>
+                        isLoader={loaderType === LoaderTypes.InsertByIndex}></Button>
                 <Button extraClass={styles.largebutton}
                         text="Удалить по индексу"
                         onClick={() => {
                             removeByIndex()
                         }}
                         disabled={(!!loaderType) || length <= 0 || !index}
-                        isLoader={loaderType == LoaderTypes.RemoveByIndex}></Button>
+                        isLoader={loaderType === LoaderTypes.RemoveByIndex}></Button>
             </div>
             <SortVizualizer length={SortVisualizerLength.Large}
                             items={items}

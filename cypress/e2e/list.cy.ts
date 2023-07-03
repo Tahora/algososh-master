@@ -2,7 +2,7 @@ import {Selectors, checkCircles} from './utils'
 
 describe('list test', function () {
         beforeEach(function () {
-            cy.visit('http://localhost:3000/list');
+            cy.visit('list');
         });
 
         it(`disable button with empty input`, function () {

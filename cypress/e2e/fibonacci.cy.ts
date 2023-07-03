@@ -2,7 +2,7 @@ import {Selectors, stateName} from './utils'
 
 describe('fibonacci test', function () {
     beforeEach(function () {
-        cy.visit('http://localhost:3000/fibonacci');
+        cy.visit('fibonacci');
     });
 
     it(`disable button with empty input`, function () {
@@ -26,7 +26,7 @@ describe('fibonacci test', function () {
 
         for (let i = 0; i <= Number(testString); i++) {
             cy.get(Selectors.SortVizualizer).find(Selectors.Circle)
-                .each(($ci, ind, $lis) => {
+                .each(($ci, ind) => {
                     cy.wrap($ci).find(Selectors.Letter)
                         .then(($let) => {
                             cy.wrap($let).find(`p`).should('contain', itemsValue[i][ind])

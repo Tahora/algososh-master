@@ -3,7 +3,7 @@ import {Selectors, States, stateName} from './utils'
 
 describe('string test', function () {
     beforeEach(function () {
-        cy.visit('http://localhost:3000/recursion');
+        cy.visit('/recursion');
     });
 
     it(`disable button with empty input`, function () {
@@ -30,7 +30,7 @@ describe('string test', function () {
 
         for (let i = 0; i < testString.length - 1; i++) {
             cy.get(Selectors.SortVizualizer).find(Selectors.Circle)
-                .each(($ci, ind, $lis) => {
+                .each(($ci, ind) => {
                     cy.wrap($ci).find(Selectors.Letter)
                         .then(($let) => {
                             cy.wrap($let).find(`p`).should('contain', itemsValue[i][ind])

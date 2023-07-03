@@ -58,16 +58,16 @@ export const StackPage: React.FC = () => {
                        value={text}></Input>
                 <Button text="Добавить"
                         onClick={() => pushItem()}
-                        isLoader={loaderType == StackLoaderTypes.Push}
+                        isLoader={loaderType === StackLoaderTypes.Push}
                         disabled={!!loaderType || !text}></Button>
                 <Button text="Удалить"
                         onClick={() => pop()}
-                        isLoader={loaderType == StackLoaderTypes.Remove}
+                        isLoader={loaderType === StackLoaderTypes.Remove}
                         disabled={!!loaderType || items.length <= 0}></Button>
                 <Button extraClass={styles.mediumIndent}
                         text="Очистить"
                         onClick={() => clean()}
-                        isLoader={loaderType == StackLoaderTypes.Clean}
+                        isLoader={loaderType === StackLoaderTypes.Clean}
                         disabled={!!loaderType || items.length <= 0}></Button>
             </div>
             <SortVizualizer items={items}

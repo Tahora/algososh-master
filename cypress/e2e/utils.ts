@@ -21,7 +21,7 @@ export function stateName(number) {
 
 export const checkCircles = (testStrings: string[], itemsStyle: States[], itemsHead: String[], itemsTail: String[]) => {
     cy.get(`${Selectors.SortVizualizer}>div>div[data-test-id="circle"]`)
-        .each(($ci, ind, $lis) => {
+        .each(($ci, ind) => {
             cy.wrap($ci).find(Selectors.Index).should('contain', ind)
             if (itemsTail[ind]) {
                 cy.wrap($ci).find(`>${Selectors.Tail}`).should('contain', itemsTail[ind])

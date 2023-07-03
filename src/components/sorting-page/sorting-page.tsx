@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useEffect, useState, useCallback} from "react";
 import {SolutionLayout} from "../ui/solution-layout/solution-layout";
 import styles from "./sorting-page.module.css";
 import {Button} from "../ui/button/button";
@@ -17,18 +18,22 @@ export const SortingPage: React.FC = () => {
     const [sortAlgorithm, setSortAlgorithm] = useState(SortAlgorithms.Bubble)
     const [currentDirection, setCurrentDirection] = useState(Direction.Ascending)
 
-    useEffect(() => {
-        setNewArray()
-    }, [])
 
     function setSorting(sorting: SortAlgorithms) {
         setSortAlgorithm(sorting)
     }
 
-    const setNewArray = async () => {
+    const setNewArray = useCallback(async () => {
         const array = arrayToColummnArray(createRandomArray());
         await changeArr(array, {}, 0)
-    }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        setNewArray()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
 
     async function selectionSort({arrayNums, direction = Direction.Ascending}: IBubbleParams) {
         await selectionSortBase({arrayNums, direction}, changeArr)
@@ -59,24 +64,24 @@ export const SortingPage: React.FC = () => {
                 <RadioInput label={"Выбор"}
                             name={"sortingType"}
                             extraClass={styles.extraSmallIndent}
-                            checked={sortAlgorithm == SortAlgorithms.Selection}
+                            checked={sortAlgorithm === SortAlgorithms.Selection}
                             onChange={() => setSorting(SortAlgorithms.Selection)}></RadioInput>
                 <RadioInput label={"Пузырёк"}
                             name={"sortingType"}
                             extraClass={styles.smallIndent}
-                            checked={sortAlgorithm == SortAlgorithms.Bubble}
+                            checked={sortAlgorithm === SortAlgorithms.Bubble}
                             onChange={() => setSorting(SortAlgorithms.Bubble)}></RadioInput>
                 <Button extraClass={styles.button}
                         text="По возрастанию"
                         sorting={Direction.Ascending}
                         onClick={() => startCalc(Direction.Ascending)}
-                        isLoader={isComputationRun && currentDirection == Direction.Ascending}
+                        isLoader={isComputationRun && currentDirection === Direction.Ascending}
                         disabled={isComputationRun}></Button>
                 <Button extraClass={`${styles.button} ${styles.mediumIndent}`}
                         text="По убыванию"
                         sorting={Direction.Descending}
                         onClick={() => startCalc(Direction.Descending)}
-                        isLoader={isComputationRun && currentDirection == Direction.Descending}
+                        isLoader={isComputationRun && currentDirection === Direction.Descending}
                         disabled={isComputationRun}></Button>
                 <Button extraClass={styles.button}
                         text="Новый массив"

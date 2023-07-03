@@ -2,7 +2,7 @@ import {Selectors, States, stateName} from './utils'
 
 describe('queue test', function () {
         beforeEach(function () {
-            cy.visit('http://localhost:3000/queue');
+            cy.visit('queue');
         });
 
         it(`disable button with empty input`, function () {
@@ -45,7 +45,7 @@ describe('queue test', function () {
 
             const checkCircles = (testStrings: string[], itemsStyle: States[], itemsHead: String[], itemsTail: String[]) => {
                 cy.get(Selectors.SortVizualizer).find(Selectors.Circle)
-                    .each(($ci, ind, $lis) => {
+                    .each(($ci, ind) => {
                         cy.wrap($ci).find(Selectors.Index).should('contain', ind)
                         cy.wrap($ci).find(Selectors.Tail).should('contain', itemsTail[ind])
                         cy.wrap($ci).find(Selectors.Head).should('contain', itemsHead[ind])

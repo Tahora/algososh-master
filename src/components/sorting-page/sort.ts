@@ -56,7 +56,7 @@ export async function bubbleSortBase({arrayNums, direction = Direction.Ascending
         }
         if (storeCallback) {
             await storeCallback(array, {
-                modifiedIndx: i == array.length - 2 ? [array.length - i - 1, 0] : [array.length - i - 1],
+                modifiedIndx: i === array.length - 2 ? [array.length - i - 1, 0] : [array.length - i - 1],
                 defaultIndx: i < array.length - 2 ? [array.length - i - 2] : []
             })
         }
