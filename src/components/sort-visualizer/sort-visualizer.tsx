@@ -9,10 +9,11 @@ import {ArrowIcon} from "../ui/icons/arrow-icon";
 interface ISortVisualizerProps {
     length?: SortVisualizerLength
     withArrows?: boolean
-    items:CircleProps[] | ColumnProps[]
+    items: CircleProps[] | ColumnProps[]
 }
 
-export const SortVizualizer: React.FC<ISortVisualizerProps> = ({items= new Array<CircleProps>(0),
+export const SortVizualizer: React.FC<ISortVisualizerProps> = ({
+                                                                   items = new Array<CircleProps>(0),
                                                                    length = SortVisualizerLength.Medium,
                                                                    withArrows = false
                                                                }) => {
@@ -24,9 +25,10 @@ export const SortVizualizer: React.FC<ISortVisualizerProps> = ({items= new Array
         if (isItemsCircle) {
             const circle = item as CircleProps
             return (
-                <div className={styles.withArrowContainer} key={key}>
-                <Circle extraClass={styles.itemIndent}  {...circle}/>
-                {withArrows && index < items.length - 1 && <ArrowIcon/>}
+                <div className={styles.withArrowContainer}
+                     key={key}>
+                    <Circle extraClass={styles.itemIndent}  {...circle}/>
+                    {withArrows && index < items.length - 1 && <ArrowIcon/>}
                 </div>)
         } else {
             const column = item as ColumnProps
@@ -38,7 +40,8 @@ export const SortVizualizer: React.FC<ISortVisualizerProps> = ({items= new Array
 
     return (
         <div className={styles.containerTop}>
-            <div className={`${styles.container} ${isItemsCircle ? styles.circleContainer : styles.columnContainer} ${styles[length]}`}>
+            <div data-test-id="sortVizualizer"
+                 className={`${styles.container} ${isItemsCircle ? styles.circleContainer : styles.columnContainer} ${styles[length]}`}>
                 {items.map((i, ind) => {
                     return createItem(i, v4(), ind)
                 })}

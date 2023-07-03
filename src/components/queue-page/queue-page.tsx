@@ -14,7 +14,7 @@ import {SHORT_DELAY_IN_MS} from "../../constants/delays";
 export const QueuePage: React.FC = () => {
     const [text, setText] = useState('')
     const [loaderType, setLoaderType] = useState<null | StackLoaderTypes>(null)
-    const { items, changeArr} =useStore()
+    const {items, changeArr} = useStore()
     const queue = useMemo(() => {
         return new Queue(6)
     }, [])
@@ -22,7 +22,7 @@ export const QueuePage: React.FC = () => {
 
 
     useEffect(() => {
-        changeArr(arrayToCircleArray(queue.toArray()),  {}, 0)
+        changeArr(arrayToCircleArray(queue.toArray()), {}, 0)
     }, [])
 
     async function pushItem() {
@@ -33,8 +33,8 @@ export const QueuePage: React.FC = () => {
         const tail = queue.getTail();
         const head = queue.getHead();
         let visualState = arrayToCircleArray(queue.toArray())
-        await changeArr(visualState, {changingIndx: [tail], tail: tail, head: head},SHORT_DELAY_IN_MS)
-        changeArr(visualState,  {defaultIndx: [tail]}, 0)
+        await changeArr(visualState, {changingIndx: [tail], tail: tail, head: head}, SHORT_DELAY_IN_MS)
+        changeArr(visualState, {defaultIndx: [tail]}, 0)
         setLoaderType(null)
     }
 
@@ -42,7 +42,7 @@ export const QueuePage: React.FC = () => {
         setLoaderType(StackLoaderTypes.Clean)
         queue.clean()
         let visualState = arrayToCircleArray(queue.toArray())
-        await changeArr(visualState,  {}, SHORT_DELAY_IN_MS)
+        await changeArr(visualState, {}, SHORT_DELAY_IN_MS)
         setLoaderType(null)
     }
 
@@ -53,7 +53,7 @@ export const QueuePage: React.FC = () => {
         const tail = queue.getTail();
         const head = queue.getHead();
         let visualState = arrayToCircleArray(queue.toArray())
-        await changeArr(visualState,  {head: head, tail: tail}, SHORT_DELAY_IN_MS)
+        await changeArr(visualState, {head: head, tail: tail}, SHORT_DELAY_IN_MS)
         setLoaderType(null)
     }
 
@@ -72,18 +72,19 @@ export const QueuePage: React.FC = () => {
                 <Button text="Добавить"
                         onClick={() => pushItem()}
                         isLoader={loaderType == StackLoaderTypes.Push}
-                        disabled={!!loaderType||!text}></Button>
+                        disabled={!!loaderType || !text}></Button>
                 <Button text="Удалить"
                         onClick={() => pop()}
                         isLoader={loaderType == StackLoaderTypes.Remove}
-                        disabled={!!loaderType||tail < 0}></Button>
+                        disabled={!!loaderType || tail < 0}></Button>
                 <Button extraClass={styles.mediumIndent}
                         text="Очистить"
                         onClick={() => clean()}
                         isLoader={loaderType == StackLoaderTypes.Clean}
-                        disabled={!!loaderType|| tail< 0}></Button>
+                        disabled={!!loaderType || tail < 0}></Button>
             </div>
-             <SortVizualizer items={items} length={SortVisualizerLength.Large}/>
+            <SortVizualizer items={items}
+                            length={SortVisualizerLength.Large}/>
 
         </SolutionLayout>
     );

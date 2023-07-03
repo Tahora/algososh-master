@@ -15,10 +15,10 @@ export const ListPage: React.FC = () => {
     const [text, setText] = useState('')
     const [index, setIndex] = useState('')
     const [loaderType, setLoaderType] = useState<null | LoaderTypes>(null)
-    const { items, changeArr} =useStore()
+    const {items, changeArr} = useStore()
     const length = items.length;
     const list = useMemo(() => {
-        const l=new LinkedList<string>()
+        const l = new LinkedList<string>()
         l.pushHead('0')
         l.pushTail('34')
         l.pushTail('8')
@@ -29,8 +29,10 @@ export const ListPage: React.FC = () => {
 
     useEffect(() => {
         const visualState = arrayToCircleArray(list.toArray())
-        changeArr(visualState,  {head:0,tail:visualState.length-1},0)
 
+        changeArr(visualState, {head: 0, tail: visualState.length - 1}, 0)
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const changeText: React.FormEventHandler<HTMLInputElement> = (e) => {
@@ -78,7 +80,7 @@ export const ListPage: React.FC = () => {
         setLoaderType(LoaderTypes.InsertByIndex)
         const ind = Number(index)
         let visualState = arrayToCircleArray(list.toArray())
-        if (visualState.length == 0) {
+        if (visualState.length === 0) {
             visualState.push({letter: ''})
         }
         const newItem = Circle({letter: `${text}`, isSmall: true, state: ElementStates.Changing})
@@ -99,8 +101,8 @@ export const ListPage: React.FC = () => {
         setIndex('')
         setText('')
         visualState = arrayToCircleArray(list.toArray())
-        await changeArr(visualState,  {head: 0, tail: visualState.length - 1, modifiedIndx: [ind]})
-        await changeArr(visualState,  {head: 0, tail: visualState.length - 1, defaultIndx: [ind]})
+        await changeArr(visualState, {head: 0, tail: visualState.length - 1, modifiedIndx: [ind]})
+        await changeArr(visualState, {head: 0, tail: visualState.length - 1, defaultIndx: [ind]})
         setLoaderType(null)
     }
 
@@ -121,13 +123,15 @@ export const ListPage: React.FC = () => {
         const newItem = Circle({letter: visualState[ind].letter, isSmall: true, state: ElementStates.Changing})
         visualState[ind].letter = ''
         visualState[ind].tail = newItem
-        await changeArr(visualState,  {head: 0})
+        await changeArr(visualState, {head: 0})
 
         list.removeByIndex(ind)
         setIndex('')
         setText('')
         visualState = arrayToCircleArray(list.toArray())
-        await changeArr(visualState,  {})
+        visualState[0].head = 'head'
+        visualState[visualState.length - 1].tail = 'tail'
+        await changeArr(visualState, {})
         setLoaderType(null)
     }
 
@@ -135,7 +139,7 @@ export const ListPage: React.FC = () => {
         // region отображение состояния списка до добавления элемента
         const newItem = Circle({letter: `${text}`, isSmall: true, state: ElementStates.Changing})
         let visualState = arrayToCircleArray(list.toArray())
-        if (visualState.length == 0) {
+        if (visualState.length === 0) {
             visualState.push({letter: ''})
         } else {
             visualState[visualState.length - 1].tail = "tail"
@@ -153,8 +157,8 @@ export const ListPage: React.FC = () => {
         // region отображение состояния списка после добавления элемента
         visualState = arrayToCircleArray(list.toArray())
         ind = headFlag ? 0 : visualState.length - 1
-        await changeArr(visualState,  {head: 0, modifiedIndx: [ind], tail: visualState.length - 1})
-        await changeArr(visualState,  {defaultIndx: [ind]})
+        await changeArr(visualState, {head: 0, modifiedIndx: [ind], tail: visualState.length - 1})
+        await changeArr(visualState, {defaultIndx: [ind]})
         // endregion отображение состояния списка после добавления элемента
         setLoaderType(null)
     }
@@ -168,21 +172,22 @@ export const ListPage: React.FC = () => {
         visualState[visualState.length - 1].tail = "tail"
         visualState[ind].tail = newItem
         visualState[ind].letter = ''
-        await changeArr(visualState,  {head: 0})
+        await changeArr(visualState, {head: 0})
         // endregion отображение состояния списка до удаления элемента
 
         headFlag ? list.removeHead() : list.removeTail()
 
         // region отображение состояния списка после удаления элемента
         visualState = arrayToCircleArray(list.toArray())
-        await changeArr(visualState,  {head: 0, tail: visualState.length - 1})
+        await changeArr(visualState, {head: 0, tail: visualState.length - 1})
         // endregion отображение состояния списка после удаления элемента
     }
 
     return (
         <SolutionLayout title="Связный список">
             <div className={`${styles.container} ${styles.textContainer}`}>
-                <Input extraClass={`${styles.input}`}
+                <Input data-test-id="valueInput"
+                       extraClass={`${styles.input}`}
                        maxLength={4}
                        isLimitText={true}
                        onChange={changeText}
@@ -191,25 +196,26 @@ export const ListPage: React.FC = () => {
                         text="Добавить в head"
                         onClick={() => pushHead()}
                         disabled={(!!loaderType) || !text}
-                        isLoader={loaderType == LoaderTypes.PushHead}></Button>
+                        isLoader={loaderType === LoaderTypes.PushHead}></Button>
                 <Button extraClass={styles.button}
                         text="Добавить в tail"
                         onClick={() => pushTail()}
                         disabled={(!!loaderType) || !text}
-                        isLoader={loaderType == LoaderTypes.PushTail}></Button>
+                        isLoader={loaderType === LoaderTypes.PushTail}></Button>
                 <Button extraClass={styles.button}
                         text="Удалить из head"
                         onClick={() => removeHead()}
                         disabled={(!!loaderType) || length <= 0}
-                        isLoader={loaderType == LoaderTypes.RemoveHead}></Button>
+                        isLoader={loaderType === LoaderTypes.RemoveHead}></Button>
                 <Button extraClass={styles.button}
                         text="Удалить из tail"
                         onClick={() => removeTail()}
                         disabled={(!!loaderType) || length <= 0}
-                        isLoader={loaderType == LoaderTypes.RemoveTail}></Button>
+                        isLoader={loaderType === LoaderTypes.RemoveTail}></Button>
             </div>
             <div className={`${styles.container} ${styles.indexContainer}`}>
                 <Input extraClass={styles.input}
+                       data-test-id="indexInput"
                        maxLength={2}
                        onChange={changeIndex}
                        value={index}
@@ -221,16 +227,18 @@ export const ListPage: React.FC = () => {
                             insertByIndex()
                         }}
                         disabled={(!!loaderType) || !index || !text}
-                        isLoader={loaderType == LoaderTypes.InsertByIndex}></Button>
+                        isLoader={loaderType === LoaderTypes.InsertByIndex}></Button>
                 <Button extraClass={styles.largebutton}
                         text="Удалить по индексу"
                         onClick={() => {
                             removeByIndex()
                         }}
                         disabled={(!!loaderType) || length <= 0 || !index}
-                        isLoader={loaderType == LoaderTypes.RemoveByIndex}></Button>
+                        isLoader={loaderType === LoaderTypes.RemoveByIndex}></Button>
             </div>
-            <SortVizualizer length={SortVisualizerLength.Large}   items={items} withArrows={true}/>
+            <SortVizualizer length={SortVisualizerLength.Large}
+                            items={items}
+                            withArrows={true}/>
         </SolutionLayout>
     );
 };
